@@ -117,6 +117,34 @@ func (r *UserRepository) UpdateAmountByRFID(rfid string, amount float64) (*model
 	return &user, nil
 }
 
+func (r *UserRepository) DeleteByRFID(rfid string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	result, err := r.collection.UpdateOne(
+		ctx,
+		bson.M{
+			"rfid_hashed": models.HashRFID(rfid),
+			"is_deleted":  false,
+		},
+		bson.M{
+			"$set": bson.M{
+				"is_deleted": true,
+				"delete_at":  time.Now(),
+			},
+		},
+	)
+	if err != nil {
+		return err
+	}
+
+	if result.MatchedCount == 0 {
+		return ErrUserNotFound
+	}
+
+	return nil
+}
+
 func (r *UserRepository) ensureIndexes() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -125,7 +153,12 @@ func (r *UserRepository) ensureIndexes() error {
 		Keys: bson.D{
 			{Key: "rfid_hashed", Value: 1},
 		},
-		Options: options.Index().SetUnique(true),
+		Options: options.Index().
+			SetName("unique_active_rfid_hashed").
+			SetUnique(true).
+			SetPartialFilterExpression(bson.M{
+				"is_deleted": false,
+			}),
 	})
 
 	return err

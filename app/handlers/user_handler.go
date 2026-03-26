@@ -138,3 +138,29 @@ func (h *UserHandler) UpdateAmountByRFID(c fiber.Ctx) error {
 		"amount": user.Amount,
 	})
 }
+
+func (h *UserHandler) DeleteUserByRFID(c fiber.Ctx) error {
+	rfid := strings.TrimSpace(c.Params("rfid"))
+	if rfid == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "rfid is required",
+		})
+	}
+
+	err := h.repo.DeleteByRFID(rfid)
+	if err == repositories.ErrUserNotFound {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "user not found",
+		})
+	}
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "failed to delete user",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "user deleted",
+	})
+}

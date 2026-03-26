@@ -10,6 +10,7 @@ func RegisterUserRoutes(app *fiber.App, userHandler *handlers.UserHandler) {
 
 	users.Get("/", userHandler.GetAllUsers)
 	users.Post("/", userHandler.CreateUser)
+	users.Delete("/:rfid", userHandler.DeleteUserByRFID)
 	users.Get("/:rfid/amount", userHandler.GetAmountByRFID)
 	users.Patch("/:rfid/amount", userHandler.UpdateAmountByRFID)
 }
