@@ -1,11 +1,11 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.3.0 Chrome/140.0.7339.249 Electron/38.7.2 Safari/537.36" version="29.3.0">
   <diagram name="Page-1" id="jA_eRrTJ_ogA9O7fNc-P">
-    <mxGraphModel dx="206" dy="143" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="894" dy="622" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="tcM411XoGHbKWAjY87f9-2" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" value="mongodb" vertex="1">
-          <mxGeometry height="80" width="60" x="600" y="200" as="geometry" />
+          <mxGeometry height="80" width="60" x="610" y="250" as="geometry" />
         </mxCell>
         <mxCell id="tcM411XoGHbKWAjY87f9-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Backend" vertex="1">
           <mxGeometry height="60" width="120" x="400" y="210" as="geometry" />
@@ -49,12 +49,6 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="tcM411XoGHbKWAjY87f9-26" edge="1" parent="1" source="tcM411XoGHbKWAjY87f9-4" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" target="tcM411XoGHbKWAjY87f9-2" value="">
-          <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <mxPoint x="530" y="320" as="sourcePoint" />
-            <mxPoint x="580" y="270" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
         <mxCell id="tcM411XoGHbKWAjY87f9-27" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="MQTT Broker" vertex="1">
           <mxGeometry height="50" width="90" x="230" y="190" as="geometry" />
         </mxCell>
@@ -68,6 +62,25 @@
           <mxGeometry height="50" relative="1" width="50" as="geometry">
             <mxPoint x="240" y="240" as="sourcePoint" />
             <mxPoint x="400" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tcM411XoGHbKWAjY87f9-31" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" value="influxdb" vertex="1">
+          <mxGeometry height="80" width="60" x="610" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="tcM411XoGHbKWAjY87f9-32" edge="1" parent="1" source="tcM411XoGHbKWAjY87f9-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=52.5;entryPerimeter=0;" target="tcM411XoGHbKWAjY87f9-31">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="225" />
+              <mxPoint x="560" y="203" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tcM411XoGHbKWAjY87f9-33" edge="1" parent="1" source="tcM411XoGHbKWAjY87f9-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=27.5;entryPerimeter=0;" target="tcM411XoGHbKWAjY87f9-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="255" />
+              <mxPoint x="560" y="278" />
+            </Array>
           </mxGeometry>
         </mxCell>
       </root>
