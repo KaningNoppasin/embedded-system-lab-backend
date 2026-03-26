@@ -1,0 +1,9 @@
+.git
+.gitignore
+collections
+docs
+tmp
+.env
+.env.*
+docker-compose*.yml
+README*

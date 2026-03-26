@@ -36,16 +36,10 @@ func main() {
 	}
 	userHandler := handlers.NewUserHandler(userRepository)
 
-	// Define a route for the GET method on the root path '/'
-	app.Get("/", func(c fiber.Ctx) error {
-		// Send a string response to the client
-		return c.SendString("Hello, World 👋!")
-	})
-
 	routes.RegisterUserRoutes(app, userHandler)
 
 	go func() {
-		if err := app.Listen(":3000"); err != nil {
+		if err := app.Listen(":8080"); err != nil {
 			log.Fatalf("fiber server failed: %v", err)
 		}
 	}()

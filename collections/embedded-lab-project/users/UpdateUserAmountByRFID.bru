@@ -1,18 +1,18 @@
 meta {
-  name: CreateUser
+  name: UpdateUserAmountByRFID
   type: http
-  seq: 1
+  seq: 3
 }
 
-post {
-  url: 127.0.0.1:3000/users
+patch {
+  url: {{BASE_URL}}:{{PORT}}/users/new-rfid/amount
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "rfid": "new-rfid"
+    "amount": 100
   }
 }
 

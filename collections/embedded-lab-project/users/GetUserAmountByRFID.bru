@@ -1,11 +1,11 @@
 meta {
   name: GetUserAmountByRFID
   type: http
-  seq: 3
+  seq: 2
 }
 
 get {
-  url: 127.0.0.1:3000/users/new-rfid/amount
+  url: {{BASE_URL}}:{{PORT}}/users/new-rfid/amount
   body: none
   auth: inherit
 }
