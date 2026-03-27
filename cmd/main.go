@@ -10,6 +10,7 @@ import (
 
 	"github.com/KaningNoppasin/embedded-system-lab-backend/app/database"
 	"github.com/KaningNoppasin/embedded-system-lab-backend/app/handlers"
+	"github.com/KaningNoppasin/embedded-system-lab-backend/app/mqtt"
 	"github.com/KaningNoppasin/embedded-system-lab-backend/app/repositories"
 	"github.com/KaningNoppasin/embedded-system-lab-backend/app/routes"
 	"github.com/gofiber/fiber/v3"
@@ -38,8 +39,16 @@ func main() {
 
 	routes.RegisterUserRoutes(app, userHandler)
 
+	temperatureSubscriber, err := mqtt.NewTemperatureSubscriber()
+	if err != nil {
+		log.Fatalf("failed to connect mqtt broker: %v", err)
+	}
+	defer temperatureSubscriber.Close()
+
+	listenAddr := ":" + getEnv("APP_PORT", "8080")
+
 	go func() {
-		if err := app.Listen(":8080"); err != nil {
+		if err := app.Listen(listenAddr); err != nil {
 			log.Fatalf("fiber server failed: %v", err)
 		}
 	}()
@@ -54,4 +63,13 @@ func main() {
 	if err := app.ShutdownWithContext(shutdownCtx); err != nil {
 		log.Printf("failed to shutdown app: %v", err)
 	}
+}
+
+func getEnv(key string, fallback string) string {
+	value := os.Getenv(key)
+	if value == "" {
+		return fallback
+	}
+
+	return value
 }

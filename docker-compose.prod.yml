@@ -1,4 +1,13 @@
 services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: embedded-lab-mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+    volumes:
+      - mosquitto_data:/mosquitto/data
+
   api:
     build:
       context: .
@@ -7,12 +16,16 @@ services:
     container_name: embedded-lab-api
     restart: unless-stopped
     depends_on:
+      mosquitto:
+        condition: service_started
       mongodb:
         condition: service_healthy
     environment:
       MONGO_URI: mongodb://admin:admin@mongodb:27017
       MONGO_DATABASE: embedded_lab
       MONGO_USER_COLLECTION: users
+      MQTT_BROKER_URL: tcp://mosquitto:1883
+      MQTT_TOPIC: esp32/temperature
     ports:
       - "8080:8080"
 
@@ -50,4 +63,5 @@ services:
       - "8081:8081"
 
 volumes:
+  mosquitto_data:
   mongodb_data:
