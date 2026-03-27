@@ -21,7 +21,11 @@ type Subscriber struct {
 	client mqtt.Client
 }
 
-func NewTemperatureSubscriber() (*Subscriber, error) {
+type TemperatureStore interface {
+	StoreTemperature(topic string, value float64) error
+}
+
+func NewTemperatureSubscriber(store TemperatureStore) (*Subscriber, error) {
 	brokerURL := getEnv("MQTT_BROKER_URL", defaultBrokerURL)
 	topic := getEnv("MQTT_TOPIC", defaultTopic)
 	clientID := getEnv("MQTT_CLIENT_ID", fmt.Sprintf("embedded-lab-api-%d", time.Now().UnixNano()))
@@ -39,6 +43,11 @@ func NewTemperatureSubscriber() (*Subscriber, error) {
 			temperature, err := strconv.ParseFloat(payload, 64)
 			if err != nil {
 				log.Printf("mqtt message parse failed for topic %s: payload=%q err=%v", msg.Topic(), payload, err)
+				return
+			}
+
+			if err := store.StoreTemperature(msg.Topic(), temperature); err != nil {
+				log.Printf("influxdb write failed for topic %s value=%f: %v", msg.Topic(), temperature, err)
 				return
 			}
 

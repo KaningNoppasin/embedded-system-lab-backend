@@ -13,6 +13,7 @@ import (
 	"github.com/KaningNoppasin/embedded-system-lab-backend/app/mqtt"
 	"github.com/KaningNoppasin/embedded-system-lab-backend/app/repositories"
 	"github.com/KaningNoppasin/embedded-system-lab-backend/app/routes"
+	"github.com/KaningNoppasin/embedded-system-lab-backend/app/timeseries"
 	"github.com/gofiber/fiber/v3"
 )
 
@@ -39,7 +40,13 @@ func main() {
 
 	routes.RegisterUserRoutes(app, userHandler)
 
-	temperatureSubscriber, err := mqtt.NewTemperatureSubscriber()
+	influxWriter, err := timeseries.NewInfluxWriter()
+	if err != nil {
+		log.Fatalf("failed to connect influxdb: %v", err)
+	}
+	defer influxWriter.Close()
+
+	temperatureSubscriber, err := mqtt.NewTemperatureSubscriber(influxWriter)
 	if err != nil {
 		log.Fatalf("failed to connect mqtt broker: %v", err)
 	}
