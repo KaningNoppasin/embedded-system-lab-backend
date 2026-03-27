@@ -2,6 +2,8 @@
 
 Backend service for an embedded systems lab project.
 
+![system-architecture](./docs/system-architecture.png)
+
 The project combines:
 
 - A Go API built with Fiber
@@ -47,7 +49,7 @@ Current user endpoints:
 - `GET /users/:rfid/amount`
 - `PATCH /users/:rfid/amount`
 
-Bruno collection files for these requests are available in [`collections/embedded-lab-project`](/Users/nn_mac/Desktop/Justcodding/embedded-lab-project/collections/embedded-lab-project).
+Bruno collection files for these requests are available in [`collections/embedded-lab-project`](./collections/embedded-lab-project).
 
 ## Tech Stack
 
@@ -60,7 +62,7 @@ Bruno collection files for these requests are available in [`collections/embedde
 
 ## Running the Project
 
-Setup and run instructions are in [docs/set-up.md](/Users/nn_mac/Desktop/Justcodding/embedded-lab-project/docs/set-up.md).
+Setup and run instructions are in [docs/set-up.md](./docs/set-up.md).
 
 That guide includes:
 
@@ -72,13 +74,13 @@ That guide includes:
 
 ## Repository Structure
 
-- [`cmd/`](/Users/nn_mac/Desktop/Justcodding/embedded-lab-project/cmd) application entrypoint
-- [`app/`](/Users/nn_mac/Desktop/Justcodding/embedded-lab-project/app) core application code
-- [`docs/`](/Users/nn_mac/Desktop/Justcodding/embedded-lab-project/docs) project documentation
-- [`collections/`](/Users/nn_mac/Desktop/Justcodding/embedded-lab-project/collections) Bruno API collection
-- [`docker-compose.yml`](/Users/nn_mac/Desktop/Justcodding/embedded-lab-project/docker-compose.yml) base local infrastructure
-- [`docker-compose.dev.yml`](/Users/nn_mac/Desktop/Justcodding/embedded-lab-project/docker-compose.dev.yml) development infrastructure
-- [`docker-compose.prod.yml`](/Users/nn_mac/Desktop/Justcodding/embedded-lab-project/docker-compose.prod.yml) production-style stack
+- [`cmd/`](./cmd) application entrypoint
+- [`app/`](./app) core application code
+- [`docs/`](./docs) project documentation
+- [`collections/`](./collections) Bruno API collection
+- [`docker-compose.yml`](./docker-compose.yml) base local infrastructure
+- [`docker-compose.dev.yml`](./docker-compose.dev.yml) development infrastructure
+- [`docker-compose.prod.yml`](./docker-compose.prod.yml) production-style stack
 
 ## Notes
 
