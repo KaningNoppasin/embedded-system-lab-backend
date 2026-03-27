@@ -119,7 +119,7 @@ func (r *UserRepository) UpdateAmountByRFID(rfid string, amount float64) (*model
 			"is_deleted":  false,
 		},
 		bson.M{
-			"$set": bson.M{
+			"$inc": bson.M{
 				"amount": amount,
 			},
 		},
