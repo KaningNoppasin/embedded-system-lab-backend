@@ -100,6 +100,12 @@ func (h *TransactionHandler) GetAllTransactions(c fiber.Ctx) error {
 	})
 }
 
+func (h *TransactionHandler) GetTransactionTypes(c fiber.Ctx) error {
+	return c.JSON(fiber.Map{
+		"types": models.TypeAmounts,
+	})
+}
+
 func (h *TransactionHandler) GetTransactionsByUserRFIDHashed(c fiber.Ctx) error {
 	userRFIDHashed := strings.TrimSpace(c.Params("userRFIDHashed"))
 	if userRFIDHashed == "" {
