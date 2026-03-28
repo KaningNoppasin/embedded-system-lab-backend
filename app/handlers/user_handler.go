@@ -3,12 +3,16 @@ package handlers
 import (
 	"strings"
 
+	"github.com/KaningNoppasin/embedded-system-lab-backend/app/models"
 	"github.com/KaningNoppasin/embedded-system-lab-backend/app/repositories"
+	"github.com/KaningNoppasin/embedded-system-lab-backend/app/services"
+	"github.com/fasthttp/websocket"
 	"github.com/gofiber/fiber/v3"
 )
 
 type UserHandler struct {
-	repo *repositories.UserRepository
+	repo         *repositories.UserRepository
+	websocketHub *services.RFIDWebSocketHub
 }
 
 type createUserRequest struct {
@@ -19,8 +23,15 @@ type updateAmountRequest struct {
 	Amount float64 `json:"amount"`
 }
 
-func NewUserHandler(repo *repositories.UserRepository) *UserHandler {
-	return &UserHandler{repo: repo}
+type sendRFIDRequest struct {
+	RFID string `json:"rfid"`
+}
+
+func NewUserHandler(repo *repositories.UserRepository, websocketHub *services.RFIDWebSocketHub) *UserHandler {
+	return &UserHandler{
+		repo:         repo,
+		websocketHub: websocketHub,
+	}
 }
 
 func (h *UserHandler) GetAllUsers(c fiber.Ctx) error {
@@ -34,8 +45,9 @@ func (h *UserHandler) GetAllUsers(c fiber.Ctx) error {
 	response := make([]fiber.Map, 0, len(users))
 	for _, user := range users {
 		response = append(response, fiber.Map{
-			"id":     user.UUID.String(),
-			"amount": user.Amount,
+			"id":          user.UUID.String(),
+			"amount":      user.Amount,
+			"rfid_hashed": models.HashRFIDHexFromBytes(user.RFID_Hashed),
 		})
 	}
 
@@ -162,5 +174,44 @@ func (h *UserHandler) DeleteUserByRFID(c fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"message": "user deleted",
+	})
+}
+
+func (h *UserHandler) RFIDWebSocket(c *websocket.Conn) {
+	h.websocketHub.AddClient(c)
+	defer h.websocketHub.RemoveClient(c)
+	defer c.Close()
+
+	for {
+		if _, _, err := c.ReadMessage(); err != nil {
+			return
+		}
+	}
+}
+
+func (h *UserHandler) SendRFIDToWebSocket(c fiber.Ctx) error {
+	var req sendRFIDRequest
+	if err := c.Bind().Body(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "invalid request body",
+		})
+	}
+
+	req.RFID = strings.TrimSpace(req.RFID)
+	if req.RFID == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "rfid is required",
+		})
+	}
+
+	if err := h.websocketHub.BroadcastRFID(req.RFID); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "failed to send rfid to websocket",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "rfid sent to websocket",
+		"rfid":    req.RFID,
 	})
 }

@@ -1,0 +1,19 @@
+meta {
+  name: ListenRFIDWebSocket
+  type: ws
+  seq: 7
+}
+
+ws {
+  url: ws://{{BASE_URL}}:{{PORT}}/users/ws
+  body: ws
+  auth: inherit
+}
+
+body:ws {
+  name: message 1
+  type: json
+  content: '''
+    {"rfid": "new-rfid" }
+  '''
+}

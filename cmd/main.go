@@ -13,6 +13,7 @@ import (
 	"github.com/KaningNoppasin/embedded-system-lab-backend/app/mqtt"
 	"github.com/KaningNoppasin/embedded-system-lab-backend/app/repositories"
 	"github.com/KaningNoppasin/embedded-system-lab-backend/app/routes"
+	"github.com/KaningNoppasin/embedded-system-lab-backend/app/services"
 	"github.com/KaningNoppasin/embedded-system-lab-backend/app/timeseries"
 	"github.com/gofiber/fiber/v3"
 )
@@ -40,7 +41,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to setup transaction repository: %v", err)
 	}
-	userHandler := handlers.NewUserHandler(userRepository)
+	rfidWebSocketHub := services.NewRFIDWebSocketHub()
+	userHandler := handlers.NewUserHandler(userRepository, rfidWebSocketHub)
 	transactionHandler := handlers.NewTransactionHandler(transactionRepository, userRepository)
 
 	routes.RegisterUserRoutes(app, userHandler)

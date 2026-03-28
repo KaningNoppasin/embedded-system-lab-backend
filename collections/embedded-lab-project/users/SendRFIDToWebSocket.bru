@@ -1,0 +1,22 @@
+meta {
+  name: SendRFIDToWebSocket
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{BASE_URL}}:{{PORT}}/users/rfid-action
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "rfid": "new-rfid"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
