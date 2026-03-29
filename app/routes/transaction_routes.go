@@ -11,5 +11,6 @@ func RegisterTransactionRoutes(app *fiber.App, transactionHandler *handlers.Tran
 	transactions.Get("/types", transactionHandler.GetTransactionTypes)
 	transactions.Get("/", transactionHandler.GetAllTransactions)
 	transactions.Post("/", transactionHandler.CreateTransactionByUserRFID)
+	transactions.Post("/status", transactionHandler.PublishTransactionStatus)
 	transactions.Get("/user-rfid-hashed/:userRFIDHashed", transactionHandler.GetTransactionsByUserRFIDHashed)
 }

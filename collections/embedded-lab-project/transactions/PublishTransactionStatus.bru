@@ -1,0 +1,22 @@
+meta {
+  name: PublishTransactionStatus
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{BASE_URL}}:{{PORT}}/transactions/status
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "status": "success"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

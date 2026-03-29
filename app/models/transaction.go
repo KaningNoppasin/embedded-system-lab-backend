@@ -13,6 +13,11 @@ var TypeAmounts = map[string]float64{
 	"C": 30.0,
 }
 
+const (
+	TransactionStatusSuccess = "SUCCESS"
+	TransactionStatusCancel  = "CANCEL"
+)
+
 type Transaction struct {
 	UUID             uuid.UUID `bson:"_id,omitempty"`
 	UserUUID         uuid.UUID `bson:"user_uuid,omitempty"` // Reference to User
@@ -32,6 +37,21 @@ func (t *Transaction) SetAmount() {
 func IsValidTransactionType(transactionType string) bool {
 	_, exists := TypeAmounts[transactionType]
 	return exists
+}
+
+func NormalizeTransactionStatus(status string) string {
+	switch status {
+	case "SUCCESS":
+		return TransactionStatusSuccess
+	case "CANCEL", "CANCLE":
+		return TransactionStatusCancel
+	default:
+		return ""
+	}
+}
+
+func IsValidTransactionStatus(status string) bool {
+	return NormalizeTransactionStatus(status) != ""
 }
 
 func NewTransaction(userUUID uuid.UUID, userRFIDHashed []byte, transactionType string, remainingBalance float64) (*Transaction, error) {

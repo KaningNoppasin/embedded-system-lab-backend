@@ -51,6 +51,14 @@ Current user endpoints:
 
 Bruno collection files for these requests are available in [`collections/embedded-lab-project`](./collections/embedded-lab-project).
 
+Current transaction endpoints:
+
+- `GET /transactions/types`
+- `GET /transactions/`
+- `POST /transactions/`
+- `POST /transactions/status`
+- `GET /transactions/user-rfid-hashed/:userRFIDHashed`
+
 ## Tech Stack
 
 - Go `1.25.6`

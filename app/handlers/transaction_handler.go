@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/KaningNoppasin/embedded-system-lab-backend/app/models"
+	"github.com/KaningNoppasin/embedded-system-lab-backend/app/mqtt"
 	"github.com/KaningNoppasin/embedded-system-lab-backend/app/repositories"
 	"github.com/gofiber/fiber/v3"
 )
@@ -12,6 +13,7 @@ import (
 type TransactionHandler struct {
 	transactionRepo *repositories.TransactionRepository
 	userRepo        *repositories.UserRepository
+	statusPublisher transactionStatusPublisher
 }
 
 type createTransactionRequest struct {
@@ -19,10 +21,24 @@ type createTransactionRequest struct {
 	Type string `json:"type"`
 }
 
-func NewTransactionHandler(transactionRepo *repositories.TransactionRepository, userRepo *repositories.UserRepository) *TransactionHandler {
+type publishTransactionStatusRequest struct {
+	Status string `json:"status"`
+}
+
+type transactionStatusPublisher interface {
+	PublishTransactionStatus(status string) (*mqtt.TransactionStatusPayload, error)
+	TransactionStatusTopic() string
+}
+
+func NewTransactionHandler(
+	transactionRepo *repositories.TransactionRepository,
+	userRepo *repositories.UserRepository,
+	statusPublisher transactionStatusPublisher,
+) *TransactionHandler {
 	return &TransactionHandler{
 		transactionRepo: transactionRepo,
 		userRepo:        userRepo,
+		statusPublisher: statusPublisher,
 	}
 }
 
@@ -130,6 +146,43 @@ func (h *TransactionHandler) GetTransactionsByUserRFIDHashed(c fiber.Ctx) error 
 
 	return c.JSON(fiber.Map{
 		"transactions": transactionResponses(transactions),
+	})
+}
+
+func (h *TransactionHandler) PublishTransactionStatus(c fiber.Ctx) error {
+	var req publishTransactionStatusRequest
+	if err := c.Bind().Body(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "invalid request body",
+		})
+	}
+
+	req.Status = strings.TrimSpace(strings.ToUpper(req.Status))
+	status := models.NormalizeTransactionStatus(req.Status)
+	if status == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message":  "invalid transaction status",
+			"statuses": []string{models.TransactionStatusSuccess, models.TransactionStatusCancel},
+		})
+	}
+
+	if h.statusPublisher == nil {
+		return c.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{
+			"message": "transaction status publisher is unavailable",
+		})
+	}
+
+	payload, err := h.statusPublisher.PublishTransactionStatus(status)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "failed to publish transaction status",
+		})
+	}
+
+	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
+		"message": "transaction status published",
+		"topic":   h.statusPublisher.TransactionStatusTopic(),
+		"payload": payload,
 	})
 }
 

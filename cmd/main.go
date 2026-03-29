@@ -43,7 +43,12 @@ func main() {
 	}
 	rfidWebSocketHub := services.NewRFIDWebSocketHub()
 	userHandler := handlers.NewUserHandler(userRepository, rfidWebSocketHub)
-	transactionHandler := handlers.NewTransactionHandler(transactionRepository, userRepository)
+	mqttPublisher, err := mqtt.NewPublisher()
+	if err != nil {
+		log.Fatalf("failed to connect mqtt publisher: %v", err)
+	}
+	defer mqttPublisher.Close()
+	transactionHandler := handlers.NewTransactionHandler(transactionRepository, userRepository, mqttPublisher)
 
 	routes.RegisterUserRoutes(app, userHandler)
 	routes.RegisterTransactionRoutes(app, transactionHandler)
