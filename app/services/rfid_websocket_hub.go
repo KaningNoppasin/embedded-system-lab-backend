@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"sync"
 
+	"github.com/KaningNoppasin/embedded-system-lab-backend/app/mqtt"
 	"github.com/fasthttp/websocket"
 )
 
@@ -40,6 +41,36 @@ func (h *RFIDWebSocketHub) BroadcastRFID(rfid string) error {
 		return err
 	}
 
+	return h.broadcast(payload)
+}
+
+func (h *RFIDWebSocketHub) BroadcastTemperature(topic string, temperature float64) error {
+	payload, err := json.Marshal(map[string]any{
+		"type":        "temperature",
+		"topic":       topic,
+		"temperature": temperature,
+	})
+	if err != nil {
+		return err
+	}
+
+	return h.broadcast(payload)
+}
+
+func (h *RFIDWebSocketHub) BroadcastINA219(topic string, ina219Payload mqtt.INA219Payload) error {
+	payload, err := json.Marshal(map[string]any{
+		"type":           "ina219",
+		"topic":          topic,
+		"ina219_payload": ina219Payload,
+	})
+	if err != nil {
+		return err
+	}
+
+	return h.broadcast(payload)
+}
+
+func (h *RFIDWebSocketHub) broadcast(payload []byte) error {
 	h.mu.RLock()
 	clients := make([]*websocket.Conn, 0, len(h.clients))
 	for conn := range h.clients {

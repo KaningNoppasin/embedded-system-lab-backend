@@ -54,7 +54,7 @@ func main() {
 	}
 	defer influxWriter.Close()
 
-	temperatureSubscriber, err := mqtt.NewTemperatureSubscriber(influxWriter)
+	temperatureSubscriber, err := mqtt.NewTemperatureSubscriber(influxWriter, rfidWebSocketHub)
 	if err != nil {
 		log.Fatalf("failed to connect mqtt broker: %v", err)
 	}

@@ -35,7 +35,12 @@ type TelemetryStore interface {
 	StoreINA219(topic string, payload INA219Payload) error
 }
 
-func NewTemperatureSubscriber(store TelemetryStore) (*Subscriber, error) {
+type TelemetryBroadcaster interface {
+	BroadcastTemperature(topic string, temperature float64) error
+	BroadcastINA219(topic string, payload INA219Payload) error
+}
+
+func NewTemperatureSubscriber(store TelemetryStore, broadcaster TelemetryBroadcaster) (*Subscriber, error) {
 	brokerURL := getEnv("MQTT_BROKER_URL", defaultBrokerURL)
 	temperatureTopic := getEnv("MQTT_TOPIC", defaultTopic)
 	ina219Topic := getEnv("MQTT_INA219_TOPIC", defaultINA219Topic)
@@ -62,6 +67,12 @@ func NewTemperatureSubscriber(store TelemetryStore) (*Subscriber, error) {
 				return
 			}
 
+			if broadcaster != nil {
+				if err := broadcaster.BroadcastTemperature(msg.Topic(), temperature); err != nil {
+					log.Printf("websocket broadcast failed for topic %s value=%f: %v", msg.Topic(), temperature, err)
+				}
+			}
+
 			log.Printf("mqtt temperature received: topic=%s value=%f", msg.Topic(), temperature)
 		})
 
@@ -84,6 +95,12 @@ func NewTemperatureSubscriber(store TelemetryStore) (*Subscriber, error) {
 			if err := store.StoreINA219(msg.Topic(), ina219Payload); err != nil {
 				log.Printf("influxdb ina219 write failed for topic %s payload=%q err=%v", msg.Topic(), payload, err)
 				return
+			}
+
+			if broadcaster != nil {
+				if err := broadcaster.BroadcastINA219(msg.Topic(), ina219Payload); err != nil {
+					log.Printf("websocket broadcast failed for topic %s payload=%q err=%v", msg.Topic(), payload, err)
+				}
 			}
 
 			log.Printf(
