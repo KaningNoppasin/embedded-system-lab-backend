@@ -34,7 +34,8 @@ func (h *RFIDWebSocketHub) RemoveClient(conn *websocket.Conn) {
 }
 
 func (h *RFIDWebSocketHub) BroadcastRFID(rfid string) error {
-	payload, err := json.Marshal(map[string]string{
+	payload, err := json.Marshal(map[string]any{
+		"type": "rfid_action",
 		"rfid": rfid,
 	})
 	if err != nil {
