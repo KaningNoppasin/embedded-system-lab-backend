@@ -71,6 +71,7 @@ func (w *InfluxWriter) StoreINA219(topic string, payload mqtt.INA219Payload) err
 			"shunt_voltage_mv": payload.ShuntVoltageMv,
 			"load_voltage_v":   payload.LoadVoltageV,
 			"current_ma":       payload.CurrentMa,
+			"power_w":          payload.PowerW,
 		},
 		time.Now(),
 	)

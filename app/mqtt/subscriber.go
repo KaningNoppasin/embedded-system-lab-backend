@@ -28,6 +28,7 @@ type INA219Payload struct {
 	ShuntVoltageMv float64 `json:"shunt_voltage_mv"`
 	LoadVoltageV   float64 `json:"load_voltage_v"`
 	CurrentMa      float64 `json:"current_ma"`
+	PowerW         float64 `json:"power_w"`
 }
 
 type TelemetryStore interface {
@@ -87,12 +88,13 @@ func NewTemperatureSubscriber(store TelemetryStore) (*Subscriber, error) {
 			}
 
 			log.Printf(
-				"mqtt ina219 received: topic=%s bus_voltage_v=%f shunt_voltage_mv=%f load_voltage_v=%f current_ma=%f",
+				"mqtt ina219 received: topic=%s bus_voltage_v=%f shunt_voltage_mv=%f load_voltage_v=%f current_ma=%f power_w=%f",
 				msg.Topic(),
 				ina219Payload.BusVoltageV,
 				ina219Payload.ShuntVoltageMv,
 				ina219Payload.LoadVoltageV,
 				ina219Payload.CurrentMa,
+				ina219Payload.PowerW,
 			)
 		})
 
