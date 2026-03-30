@@ -48,8 +48,9 @@ func main() {
 	}
 	rfidWebSocketHub := services.NewRFIDWebSocketHub()
 	discordNotifier := services.NewDiscordNotifier()
+	lineNotifier := services.NewLineNotifier()
 	userHandler := handlers.NewUserHandler(userRepository, rfidWebSocketHub)
-	notificationHandler := handlers.NewNotificationHandler(discordNotifier)
+	notificationHandler := handlers.NewNotificationHandler(discordNotifier, lineNotifier)
 	mqttPublisher, err := mqtt.NewPublisher()
 	if err != nil {
 		log.Fatalf("failed to connect mqtt publisher: %v", err)

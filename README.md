@@ -64,6 +64,7 @@ Current transaction endpoints:
 Current notification endpoints:
 
 - `POST /notifications/discord`
+- `POST /notifications/line`
 
 ## Tech Stack
 

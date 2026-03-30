@@ -1,0 +1,22 @@
+meta {
+  name: SendLineNotification
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{BASE_URL}}:{{PORT}}/notifications/line
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "message": "Transaction completed successfully"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

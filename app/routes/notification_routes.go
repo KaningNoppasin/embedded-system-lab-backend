@@ -9,4 +9,5 @@ func RegisterNotificationRoutes(app *fiber.App, notificationHandler *handlers.No
 	notifications := app.Group("/notifications")
 
 	notifications.Post("/discord", notificationHandler.SendDiscordNotification)
+	notifications.Post("/line", notificationHandler.SendLineNotification)
 }

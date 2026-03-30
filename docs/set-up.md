@@ -45,6 +45,8 @@ INFLUXDB_TOKEN=embedded-lab-token
 INFLUXDB_ORG=embedded-lab
 INFLUXDB_BUCKET=telemetry
 DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
+LINE_CHANNEL_ACCESS_TOKEN=...
+LINE_USER_ID=Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 You can create a local env file from `.env.example`, then add the MQTT and InfluxDB values if needed.
@@ -195,3 +197,4 @@ make rebuild-api
 - Grafana connects to InfluxDB automatically through Docker Compose.
 - MongoDB is still used for user-related data.
 - `POST /notifications/discord` sends the request body message to `DISCORD_WEBHOOK_URL`.
+- `POST /notifications/line` sends the request body message to `LINE_USER_ID` via the LINE Messaging API using `LINE_CHANNEL_ACCESS_TOKEN`.
