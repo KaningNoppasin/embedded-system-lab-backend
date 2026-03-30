@@ -10,6 +10,7 @@ The project combines:
 - MongoDB for user records
 - Mosquitto as the MQTT broker
 - InfluxDB for temperature time-series storage
+- Grafana for InfluxDB dashboards
 - Docker Compose for local and containerized runs
 
 ## Overview
@@ -38,6 +39,7 @@ Main services in this repository:
 - mongo-express
 - Mosquitto
 - InfluxDB
+- Grafana
 
 ## API Endpoints
 
@@ -69,6 +71,7 @@ Current notification endpoints:
 - Fiber v3
 - MongoDB
 - InfluxDB 2
+- Grafana
 - Eclipse Mosquitto
 - Docker Compose
 
@@ -83,6 +86,7 @@ That guide includes:
 - Production-style Docker startup
 - Required environment variables
 - MQTT and InfluxDB verification steps
+- Grafana access details
 
 ## Repository Structure
 
@@ -98,4 +102,5 @@ That guide includes:
 
 - MQTT payloads on `esp32/temperature` must be numeric values such as `26.4`
 - Temperature data is stored in InfluxDB bucket `telemetry`
+- Grafana is available at `http://localhost:3000` with `admin` / `adminadmin123`
 - User data remains in MongoDB

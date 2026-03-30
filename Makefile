@@ -3,11 +3,11 @@ API_IMAGE := embedded-lab-api:latest
 DEV_COMPOSE := docker compose -f docker-compose.dev.yml
 PROD_COMPOSE := docker compose -f docker-compose.prod.yml
 
-.PHONY: help dev-up dev-down dev-logs prod-up prod-down prod-logs build-api rebuild-api ps mongo-logs express-logs api-logs mongo-shell
+.PHONY: help dev-up dev-down dev-logs prod-up prod-down prod-logs build-api rebuild-api ps mongo-logs express-logs grafana-logs api-logs mongo-shell
 
 help:
 	@echo "Available targets:"
-	@echo "  make dev-up       Start MongoDB and mongo-express for development"
+	@echo "  make dev-up       Start MongoDB, InfluxDB, Grafana, Mosquitto, and mongo-express for development"
 	@echo "  make dev-down     Stop development services"
 	@echo "  make dev-logs     Show development service logs"
 	@echo "  make build-api    Build the API Docker image"
@@ -18,6 +18,7 @@ help:
 	@echo "  make ps           List running containers for this project"
 	@echo "  make mongo-logs   Show MongoDB logs"
 	@echo "  make express-logs Show mongo-express logs"
+	@echo "  make grafana-logs Show Grafana logs"
 	@echo "  make api-logs     Show API logs"
 	@echo "  make mongo-shell  Open mongosh inside the MongoDB container"
 
@@ -53,6 +54,9 @@ mongo-logs:
 
 express-logs:
 	$(DEV_COMPOSE) logs -f mongo-express
+
+grafana-logs:
+	$(DEV_COMPOSE) logs -f grafana
 
 api-logs:
 	$(PROD_COMPOSE) logs -f api

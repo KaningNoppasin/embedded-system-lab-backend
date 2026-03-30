@@ -25,6 +25,23 @@ services:
       - influxdb_data:/var/lib/influxdb2
       - influxdb_config:/etc/influxdb2
 
+  grafana:
+    image: grafana/grafana:11.1.0
+    container_name: embedded-lab-grafana
+    restart: unless-stopped
+    depends_on:
+      - influxdb
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: adminadmin123
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+
   api:
     build:
       context: .
@@ -88,6 +105,7 @@ services:
       - "8081:8081"
 
 volumes:
+  grafana_data:
   influxdb_config:
   influxdb_data:
   mosquitto_data:

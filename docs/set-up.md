@@ -6,6 +6,7 @@ This project contains:
 - MongoDB for user data
 - Mosquitto as the MQTT broker
 - InfluxDB for temperature time-series data
+- Grafana for dashboards
 - mongo-express for MongoDB inspection
 
 ## Prerequisites
@@ -26,6 +27,7 @@ Default ports used by the project:
 - mongo-express: `8081`
 - Mosquitto MQTT broker: `1883`
 - InfluxDB: `8086`
+- Grafana: `3000`
 
 ## Environment Variables
 
@@ -59,6 +61,7 @@ This starts:
 
 - Mosquitto
 - InfluxDB
+- Grafana
 - MongoDB
 - mongo-express
 
@@ -142,6 +145,19 @@ Use these initial credentials:
 - Organization: `embedded-lab`
 - Bucket: `telemetry`
 
+6. Open Grafana:
+
+```text
+http://localhost:3000
+```
+
+Use these credentials:
+
+- Username: `admin`
+- Password: `adminadmin123`
+
+Grafana is pre-provisioned with the InfluxDB datasource and the `Embedded Lab Overview` dashboard.
+
 ## MongoDB Access
 
 Open mongo-express:
@@ -175,5 +191,7 @@ make rebuild-api
 - The API subscribes to MQTT topic `esp32/temperature`.
 - The MQTT payload must be a float value such as `25.4`.
 - Each received temperature is written to InfluxDB measurement `temperature`.
+- INA219 telemetry is written to InfluxDB measurement `ina219`.
+- Grafana connects to InfluxDB automatically through Docker Compose.
 - MongoDB is still used for user-related data.
 - `POST /notifications/discord` sends the request body message to `DISCORD_WEBHOOK_URL`.
