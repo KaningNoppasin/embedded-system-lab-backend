@@ -42,6 +42,7 @@ INFLUXDB_URL=http://localhost:8086
 INFLUXDB_TOKEN=embedded-lab-token
 INFLUXDB_ORG=embedded-lab
 INFLUXDB_BUCKET=telemetry
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
 ```
 
 You can create a local env file from `.env.example`, then add the MQTT and InfluxDB values if needed.
@@ -175,3 +176,4 @@ make rebuild-api
 - The MQTT payload must be a float value such as `25.4`.
 - Each received temperature is written to InfluxDB measurement `temperature`.
 - MongoDB is still used for user-related data.
+- `POST /notifications/discord` sends the request body message to `DISCORD_WEBHOOK_URL`.

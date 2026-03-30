@@ -8,6 +8,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/KaningNoppasin/embedded-system-lab-backend/app/config"
 	"github.com/KaningNoppasin/embedded-system-lab-backend/app/database"
 	"github.com/KaningNoppasin/embedded-system-lab-backend/app/handlers"
 	"github.com/KaningNoppasin/embedded-system-lab-backend/app/mqtt"
@@ -19,6 +20,10 @@ import (
 )
 
 func main() {
+	if err := config.LoadEnvFile(".env"); err != nil {
+		log.Fatalf("failed to load .env file: %v", err)
+	}
+
 	mongoClient, userCollection, transactionCollection, err := database.ConnectMongo()
 	if err != nil {
 		log.Fatalf("failed to connect mongo: %v", err)
@@ -42,7 +47,9 @@ func main() {
 		log.Fatalf("failed to setup transaction repository: %v", err)
 	}
 	rfidWebSocketHub := services.NewRFIDWebSocketHub()
+	discordNotifier := services.NewDiscordNotifier()
 	userHandler := handlers.NewUserHandler(userRepository, rfidWebSocketHub)
+	notificationHandler := handlers.NewNotificationHandler(discordNotifier)
 	mqttPublisher, err := mqtt.NewPublisher()
 	if err != nil {
 		log.Fatalf("failed to connect mqtt publisher: %v", err)
@@ -51,6 +58,7 @@ func main() {
 	transactionHandler := handlers.NewTransactionHandler(transactionRepository, userRepository, mqttPublisher)
 
 	routes.RegisterUserRoutes(app, userHandler)
+	routes.RegisterNotificationRoutes(app, notificationHandler)
 	routes.RegisterTransactionRoutes(app, transactionHandler)
 
 	influxWriter, err := timeseries.NewInfluxWriter()

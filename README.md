@@ -59,6 +59,10 @@ Current transaction endpoints:
 - `POST /transactions/status`
 - `GET /transactions/user-rfid-hashed/:userRFIDHashed`
 
+Current notification endpoints:
+
+- `POST /notifications/discord`
+
 ## Tech Stack
 
 - Go `1.25.6`
